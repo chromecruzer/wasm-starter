@@ -1,0 +1,196 @@
+
+D:\react-wasm>npm create rsbuild@latest
+Need to install the following packages:
+create-rsbuild@1.1.2
+Ok to proceed? (y)
+
+
+> npx
+> create-rsbuild
+
+
+◆  Create Rsbuild Project
+|
+o  Project name or path
+|  summa
+|
+o  Select framework
+|  React
+|
+o  Select language
+|  JavaScript
+|
+o  Select additional tools (Use <space> to select, <enter> to continue)
+|  Add Prettier for code formatting
+|
+o  Next steps --+
+|               |
+|  cd summa     |
+|  npm install  |
+|  npm run dev  |
+|               |
++---------------+
+|
+—  Done.
+
+
+D:\react-wasm>cd summa
+
+D:\react-wasm\summa>npm i
+
+added 23 packages, and audited 24 packages in 11s
+
+4 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+D:\react-wasm\summa>dir
+ Volume in drive D is New Volume
+ Volume Serial Number is C0FA-62F8
+
+ Directory of D:\react-wasm\summa
+
+24-12-2024  16:27    <DIR>          .
+24-12-2024  16:27    <DIR>          ..
+24-12-2024  16:27               108 .gitignore
+24-12-2024  16:27                56 .prettierignore
+24-12-2024  16:27                26 .prettierrc
+24-12-2024  16:27    <DIR>          node_modules
+24-12-2024  16:27            14,987 package-lock.json
+24-12-2024  16:27               414 package.json
+24-12-2024  16:27    <DIR>          public
+24-12-2024  16:27               262 README.md
+24-12-2024  16:27               162 rsbuild.config.mjs
+24-12-2024  16:27    <DIR>          src
+               7 File(s)         16,015 bytes
+               5 Dir(s)  103,000,563,712 bytes free
+
+D:\react-wasm\summa>code .
+
+D:\react-wasm\summa>cd ../
+
+D:\react-wasm>dir
+ Volume in drive D is New Volume
+ Volume Serial Number is C0FA-62F8
+
+ Directory of D:\react-wasm
+
+24-12-2024  16:27    <DIR>          .
+24-12-2024  16:27    <DIR>          ..
+24-12-2024  12:37    <DIR>          hello-wasm
+24-12-2024  16:29    <DIR>          summa
+               0 File(s)              0 bytes
+               4 Dir(s)  103,000,154,112 bytes free
+
+D:\react-wasm>npm create vite@latest
+Need to install the following packages:
+create-vite@6.1.1
+Ok to proceed? (y)
+
+
+> npx
+> create-vite
+
+√ Project name: ... summa2
+√ Select a framework: » React
+√ Select a variant: » JavaScript
+
+Scaffolding project in D:\react-wasm\summa2...
+
+Done. Now run:
+
+  cd summa2
+  npm install
+  npm run dev
+
+
+D:\react-wasm>cd summa2
+
+D:\react-wasm\summa2>npm i
+
+added 254 packages, and audited 255 packages in 21s
+
+105 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+D:\react-wasm\summa2>dir
+ Volume in drive D is New Volume
+ Volume Serial Number is C0FA-62F8
+
+ Directory of D:\react-wasm\summa2
+
+24-12-2024  16:35    <DIR>          .
+24-12-2024  16:35    <DIR>          ..
+24-12-2024  16:35               253 .gitignore
+24-12-2024  16:35             1,003 eslint.config.js
+24-12-2024  16:35               361 index.html
+24-12-2024  16:35    <DIR>          node_modules
+24-12-2024  16:35           153,767 package-lock.json
+24-12-2024  16:35               642 package.json
+24-12-2024  16:35    <DIR>          public
+24-12-2024  16:35               451 README.md
+24-12-2024  16:35    <DIR>          src
+24-12-2024  16:35               161 vite.config.js
+               7 File(s)        156,638 bytes
+               5 Dir(s)  102,931,517,440 bytes free
+
+D:\react-wasm\summa2>code .
+
+D:\react-wasm\summa2>
+
+
+///////////////
+
+import React, { useState, useEffect } from 'react';
+import init, { parse_csv } from '../public/pkg/hello_wasm'; // Adjust path if needed
+
+const App = () => {
+    const [output, setOutput] = useState('');
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadWasm = async () => {
+            await init(); // Initialize the WASM module
+            setLoading(false);
+        };
+        loadWasm();
+    }, []);
+
+    const handleFileUpload = (event) => {
+        const file = event.target.files[0];
+        if (!file) {
+            setOutput('Please upload a CSV file.');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const csvContent = e.target.result;
+            const result = parse_csv(csvContent); // Use the WASM function
+            setOutput(result);
+        };
+        reader.readAsText(file);
+    };
+
+    if (loading) {
+        return <p>Loading WebAssembly...</p>;
+    }
+
+    return (
+        <div>
+            <h1>CSV Parser with WebAssembly</h1>
+            <input type="file" accept=".csv" onChange={handleFileUpload} />
+            <pre>{output}</pre>
+        </div>
+    );
+};
+
+export default App;
+
+
+//////
+
+Load the pkg in public dir nigga
