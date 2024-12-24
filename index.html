@@ -1,0 +1,74 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WASM Example</title>
+</head>
+<body>
+    <h1>WebAssembly Example</h1>
+    <button id="greetButton">Click me</button>
+    <script type="module">
+        import init, { greet } from "./pkg/hello_wasm.js"; // Import the generated package
+
+        async function run() {
+            await init(); // Initialize the WASM module
+            document.getElementById("greetButton").addEventListener("click", () => {
+                greet(); // Call the `greet` function from the WASM module
+            });
+        }
+
+        run();
+    </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Parser with WASM</title>
+</head>
+<body>
+    <h1>WebAssembly CSV Parser</h1>
+    
+    <!-- File upload section -->
+    <input type="file" id="csvFileInput" accept=".csv">
+    <button id="parseCsvButton">Parse CSV</button>
+    
+    <!-- Display the parsed result -->
+    <pre id="output"></pre>
+
+    <script type="module">
+        import init, { parse_csv } from "./pkg/hello_wasm.js"; // Import the generated WASM package
+
+        async function run() {
+            await init(); // Initialize the WASM module
+
+            // File upload and parsing logic
+            document.getElementById("parseCsvButton").addEventListener("click", async () => {
+                const fileInput = document.getElementById("csvFileInput");
+                const outputElement = document.getElementById("output");
+
+                if (fileInput.files.length === 0) {
+                    outputElement.textContent = "Please upload a CSV file.";
+                    return;
+                }
+
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function(event) {
+                    const csvContent = event.target.result; // Get file content
+                    const parsedResult = parse_csv(csvContent); // Call the WASM function
+                    outputElement.textContent = parsedResult; // Display the result
+                };
+
+                reader.readAsText(file); // Read file content as text
+            });
+        }
+
+        run();
+    </script>
+</body>
+</html>
