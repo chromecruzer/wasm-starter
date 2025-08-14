@@ -87,5 +87,5 @@ conditions.
 
 ### Deprecated warning for web use this as object path instead of direct string. 
 ```
-init({module_or_path: '/path-wasm-module.wasm'}) 
+await init({module_or_path: '/path-wasm-module.wasm'}) 
 ```
